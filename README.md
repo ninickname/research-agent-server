@@ -9,8 +9,12 @@ Research Agent Server is a microservice that searches the web for information on
 ## Features
 
 - 🔍 **Web Search Integration** - Connects to MCP web server for search capabilities
+- 🧠 **Query Optimization** - AI-powered search query refinement for better results
 - 🌐 **Parallel Content Fetching** - Efficiently retrieves content from multiple URLs concurrently
-- 🤖 **AI-Powered Summarization** - Uses Ollama (llama3.1:latest) for intelligent content synthesis
+- ⚡ **Quick Summary** - Instant preliminary summaries from search snippets
+- 🤖 **AI-Powered Comprehensive Summarization** - Deep content analysis using Ollama (llama3.1:latest)
+- 📡 **Real-time Streaming** - Server-Sent Events (SSE) for live progress updates
+- 🎨 **Interactive Web UI** - Beautiful, responsive interface with live progress tracking
 - 🐳 **Docker Ready** - Containerized deployment with docker-compose
 - 🏗️ **Clean Architecture** - Spring Boot + LangChain4j agent-based design
 - 📊 **REST API** - Simple HTTP interface for integration
@@ -18,36 +22,44 @@ Research Agent Server is a microservice that searches the web for information on
 ## Architecture
 
 ```
-┌─────────────────┐
-│  REST Client    │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────────────────────────┐
-│    Research Agent Server            │
-│                                     │
-│  ┌─────────────────────────────┐   │
-│  │  ResearchController         │   │
-│  │  (REST API)                 │   │
-│  └────────────┬────────────────┘   │
-│               │                     │
-│  ┌────────────▼────────────────┐   │
-│  │  ResearchOrchestrator       │   │
-│  │  (Service Layer)            │   │
-│  └─┬──────────┬────────────┬──┘   │
-│    │          │            │       │
-│  ┌─▼─────┐ ┌─▼──────┐  ┌──▼────┐ │
-│  │ Web   │ │Content │  │Summa- │ │
-│  │Search │ │Fetcher │  │rizing │ │
-│  │Tool   │ │Tool    │  │Agent  │ │
-│  └───┬───┘ └───┬────┘  └───┬───┘ │
-└──────┼─────────┼───────────┼─────┘
-       │         │           │
-       ▼         ▼           ▼
-   ┌────────┐ ┌──────┐  ┌────────┐
-   │  MCP   │ │ Web  │  │ Ollama │
-   │  Web   │ │Sites │  │(External)
-   └────────┘ └──────┘  └────────┘
+┌──────────────────┐         ┌─────────────────┐
+│   Web UI (SSE)   │         │  REST Client    │
+└────────┬─────────┘         └────────┬────────┘
+         │                            │
+         └──────────────┬─────────────┘
+                        ▼
+┌───────────────────────────────────────────────────┐
+│         Research Agent Server                     │
+│                                                   │
+│  ┌──────────────────────────────────────────┐    │
+│  │  ResearchController                      │    │
+│  │  (REST API + SSE Streaming)              │    │
+│  └──────────────┬───────────────────────────┘    │
+│                 │                                 │
+│  ┌──────────────▼───────────────────────────┐    │
+│  │  ResearchOrchestrator                    │    │
+│  │  (Service Layer + Async Orchestration)   │    │
+│  └─┬─────┬─────┬──────────┬──────────┬─────┘    │
+│    │     │     │          │          │           │
+│  ┌─▼──┐┌─▼──┐┌─▼──────┐┌──▼───────┐┌─▼───────┐ │
+│  │Qry ││Web ││Content ││Quick     ││Compreh- │ │
+│  │Opt.││Srch││Fetcher ││Summary   ││ensive   │ │
+│  │Agt.││Tool││Tool    ││Agent     ││Summary  │ │
+│  └─┬──┘└─┬──┘└───┬────┘└──┬───────┘│Agent    │ │
+│    │     │       │         │        └─────┬───┘ │
+└────┼─────┼───────┼─────────┼──────────────┼─────┘
+     │     │       │         │              │
+     ▼     ▼       ▼         ▼              ▼
+┌────────────┐ ┌──────┐  ┌──────────────────────┐
+│   Ollama   │ │ MCP  │  │      Ollama          │
+│ (optimize) │ │ Web  │  │  (summarization)     │
+└────────────┘ └──┬───┘  └──────────────────────┘
+                  │
+                  ▼
+              ┌──────┐
+              │ Web  │
+              │Sites │
+              └──────┘
 ```
 
 ## Prerequisites
@@ -83,19 +95,41 @@ docker-compose up --build
 # The API will be available at http://localhost:8080
 ```
 
-### 3. Test the API
+### 3. Access the Application
 
+**Option A: Web UI (Recommended)**
 ```bash
-# Example: Research why sugar is good (3 sources)
-curl "http://localhost:8080/api/research?topic=why%20sugar%20is%20good&count=3"
+# Open your browser
+http://localhost:8080
 
-# Example: Research artificial intelligence (5 sources)
+# Interactive UI with live progress tracking!
+```
+
+**Option B: REST API**
+```bash
+# Standard JSON endpoint
 curl "http://localhost:8080/api/research?topic=artificial%20intelligence&count=5"
+
+# Streaming endpoint (SSE)
+curl -N "http://localhost:8080/api/research/stream?topic=quantum%20computing&count=3"
 ```
 
 ## API Documentation
 
-### Research Endpoint
+### Web UI
+
+**Access:** `http://localhost:8080`
+
+The web UI provides:
+- Real-time progress tracking with Server-Sent Events (SSE)
+- Collapsible sections for each research stage
+- Markdown rendering for summaries
+- Interactive result exploration
+- Beautiful, responsive design
+
+### REST Endpoints
+
+#### 1. Standard Research Endpoint
 
 **Endpoint:** `GET /api/research`
 
@@ -107,32 +141,74 @@ curl "http://localhost:8080/api/research?topic=artificial%20intelligence&count=5
 ```json
 {
   "topic": "artificial intelligence",
-  "searchResults": [
-    {
-      "title": "What is Artificial Intelligence?",
-      "url": "https://example.com/ai-intro",
-      "description": "An introduction to AI..."
-    }
-  ],
+  "optimizedQuery": "artificial intelligence overview applications",
+  "searchResults": {
+    "results": [
+      {
+        "title": "What is Artificial Intelligence?",
+        "url": "https://example.com/ai-intro",
+        "content": "Brief snippet..."
+      }
+    ]
+  },
+  "quickSummary": "Based on initial snippets: AI is...",
   "contents": [
     "Full content from source 1...",
     "Full content from source 2..."
   ],
-  "summary": "Artificial intelligence (AI) is a field of computer science..."
+  "comprehensiveSummary": "Comprehensive analysis: Artificial intelligence (AI)..."
 }
 ```
+
+#### 2. Streaming Research Endpoint (SSE)
+
+**Endpoint:** `GET /api/research/stream`
+
+**Query Parameters:**
+- `topic` (required) - The research topic/question
+- `count` (optional, default: 5) - Number of sources to fetch and analyze
+
+**Response:** Server-Sent Events stream
+
+**Event Types:**
+- `step` - Current processing step
+- `optimized_query` - Optimized search query
+- `search_results` - Search results (JSON)
+- `quick_summary` - Preliminary summary from snippets
+- `contents_array` - Fetched content (JSON array)
+- `comprehensive_summary` - Final comprehensive summary
+- `complete` - Research finished
+- `error` - Error occurred
+
+**Example (curl):**
+```bash
+curl -N "http://localhost:8080/api/research/stream?topic=climate%20change&count=3"
+```
+
+### Workflow Stages
+
+The research process follows these stages:
+
+1. **Query Optimization** - AI refines the search query for better results
+2. **Web Search** - Searches using optimized query via MCP server
+3. **Quick Summary** - Generates preliminary summary from search snippets (async)
+4. **Content Fetching** - Retrieves full content from URLs in parallel
+5. **Comprehensive Summary** - Deep analysis and synthesis of all fetched content
 
 ### Example Requests
 
 ```bash
-# Basic research request
+# Web UI (recommended)
+open http://localhost:8080
+
+# Standard JSON API
 curl "http://localhost:8080/api/research?topic=climate%20change&count=5"
 
-# Research with fewer sources
-curl "http://localhost:8080/api/research?topic=quantum%20computing&count=3"
+# Streaming with live updates
+curl -N "http://localhost:8080/api/research/stream?topic=quantum%20computing&count=3"
 
-# Using wget
-wget -qO- "http://localhost:8080/api/research?topic=machine%20learning&count=4"
+# Research with fewer sources
+curl "http://localhost:8080/api/research?topic=machine%20learning&count=2"
 ```
 
 ## Local Development
@@ -219,22 +295,26 @@ research-agent-server/
 │   │   ├── java/com/ninickname/summarizer/
 │   │   │   ├── ResearchAgentApplication.java    # Spring Boot entry point
 │   │   │   ├── controller/
-│   │   │   │   └── ResearchController.java      # REST API
+│   │   │   │   └── ResearchController.java      # REST API + SSE streaming
 │   │   │   ├── service/
-│   │   │   │   └── ResearchOrchestrator.java    # Business logic
+│   │   │   │   └── ResearchOrchestrator.java    # Async workflow orchestration
 │   │   │   ├── agents/
-│   │   │   │   ├── ResearchAgent.java           # Agent interface
-│   │   │   │   └── SummarizingAgent.java        # AI summarization
+│   │   │   │   ├── QueryOptimizerAgent.java     # Query optimization
+│   │   │   │   ├── QuickSummaryAgent.java       # Fast snippet summarization
+│   │   │   │   └── SummarizingAgent.java        # Comprehensive summarization
 │   │   │   ├── tool/
-│   │   │   │   ├── WebSearchTool.java           # Search integration
-│   │   │   │   └── ContentFetcherTool.java      # Content retrieval
+│   │   │   │   ├── WebSearchTool.java           # MCP search integration
+│   │   │   │   └── ContentFetcherTool.java      # Parallel content fetching
 │   │   │   ├── model/
-│   │   │   │   ├── SearchResult.java
-│   │   │   │   └── ResearchResult.java
+│   │   │   │   ├── SearxngResult.java           # Search result model
+│   │   │   │   ├── SearxngResponse.java         # Search response wrapper
+│   │   │   │   └── ResearchResult.java          # Complete research result
 │   │   │   └── config/
-│   │   │       └── AgentConfiguration.java      # Spring beans
+│   │   │       └── OllamaConfiguration.java     # Spring beans & LLM config
 │   │   └── resources/
-│   │       └── application.properties
+│   │       ├── application.properties
+│   │       └── static/
+│   │           └── index.html                   # Interactive web UI
 │   └── test/
 │       └── java/com/ninickname/summarizer/
 ├── Dockerfile

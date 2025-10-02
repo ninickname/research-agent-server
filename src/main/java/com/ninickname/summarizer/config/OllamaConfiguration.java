@@ -1,5 +1,7 @@
 package com.ninickname.summarizer.config;
 
+import com.ninickname.summarizer.agents.QueryOptimizerAgent;
+import com.ninickname.summarizer.agents.QuickSummaryAgent;
 import com.ninickname.summarizer.agents.SummarizingAgent;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
@@ -18,6 +20,16 @@ public class OllamaConfiguration {
                 .baseUrl(ollamaUrl)
                 .modelName(ollamaModel)
                 .build();
+    }
+
+    @Bean
+    public QueryOptimizerAgent queryOptimizerAgent(ChatModel chatLanguageModel) {
+        return QueryOptimizerAgent.create(chatLanguageModel);
+    }
+
+    @Bean
+    public QuickSummaryAgent quickSummaryAgent(ChatModel chatLanguageModel) {
+        return QuickSummaryAgent.create(chatLanguageModel);
     }
 
     @Bean

@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Agent - Live Progress</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .search-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .count-input {
+            width: 100px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .search-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        .search-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-container {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-container.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .section.active {
+            border-color: #667eea;
+        }
+
+        .section.completed {
+            border-color: #4caf50;
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.3s;
+        }
+
+        .section.active .section-header {
+            background: #e8eaf6;
+        }
+
+        .section.completed .section-header {
+            background: #e8f5e9;
+        }
+
+        .section-header:hover {
+            background: #e9ecef;
+        }
+
+        .section-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .status-active {
+            background: #667eea;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .status-completed {
+            background: #4caf50;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .section-content {
+            display: none;
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .section.expanded .section-content {
+            display: block;
+        }
+
+        .section-content pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .url-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .url-item {
+            padding: 10px;
+            background: #f8f9fa;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .url-item a {
+            color: #667eea;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .url-item a:hover {
+            text-decoration: underline;
+        }
+
+        .expand-icon {
+            font-size: 20px;
+            color: #999;
+            transition: transform 0.3s;
+        }
+
+        .section.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #c62828;
+            margin-top: 15px;
+        }
+
+        .array-container {
+            margin-top: 10px;
+        }
+
+        .array-item {
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .array-item-header {
+            padding: 12px 15px;
+            background: #f8f9fa;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .array-item-header:hover {
+            background: #e9ecef;
+        }
+
+        .array-item-content {
+            display: none;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .array-item.expanded .array-item-content {
+            display: block;
+        }
+
+        .array-expand-icon {
+            font-size: 16px;
+            color: #999;
+            transition: transform 0.3s;
+        }
+
+        .array-item.expanded .array-expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .array-item-content pre {
+            background: #f1f3f5;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        .clear-btn {
+            padding: 10px 25px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            float: right;
+            margin-top: 15px;
+        }
+
+        .clear-btn:hover {
+            background: #d32f2f;
+        }
+
+        .markdown-content {
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .markdown-content h1 {
+            font-size: 1.8em;
+            margin: 20px 0 15px 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .markdown-content h2 {
+            font-size: 1.5em;
+            margin: 18px 0 12px 0;
+            color: #34495e;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 6px;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.3em;
+            margin: 15px 0 10px 0;
+            color: #4a5568;
+        }
+
+        .markdown-content p {
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        .markdown-content ul {
+            margin: 12px 0;
+            padding-left: 25px;
+        }
+
+        .markdown-content ul li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .markdown-content strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .markdown-content em {
+            font-style: italic;
+            color: #555;
+        }
+
+        .markdown-content ol {
+            margin: 12px 0;
+            padding-left: 25px;
+        }
+
+        .markdown-content ol li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Research Agent</h1>
+            <p>AI-powered research with live progress tracking</p>
+        </div>
+
+        <div class="search-card">
+            <form class="search-form" id="searchForm">
+                <input
+                    type="text"
+                    class="search-input"
+                    id="topicInput"
+                    placeholder="Enter a topic to research (e.g., artificial intelligence, climate change, quantum computing)"
+                    required
+                >
+                <input
+                    type="number"
+                    class="count-input"
+                    id="countInput"
+                    value="5"
+                    min="1"
+                    max="10"
+                    title="Number of results"
+                >
+                <button type="submit" class="search-btn" id="searchBtn">
+                    <span id="btnText">Research</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <button class="clear-btn" id="clearBtn" onclick="clearResults()">Clear Results</button>
+            <div style="clear: both;"></div>
+
+            <div class="section" id="section-optimized-query">
+                <div class="section-header" onclick="toggleSection('optimized-query')">
+                    <div class="section-title">
+                        <span>1. Optimized Query</span>
+                        <span class="status-badge status-pending" id="badge-optimized-query">Pending</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="section-content" id="content-optimized-query">
+                    <pre id="data-optimized-query">Waiting...</pre>
+                </div>
+            </div>
+
+            <div class="section" id="section-search-results">
+                <div class="section-header" onclick="toggleSection('search-results')">
+                    <div class="section-title">
+                        <span>2. Search Results</span>
+                        <span class="status-badge status-pending" id="badge-search-results">Pending</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="section-content" id="content-search-results">
+                    <div id="data-search-results">Waiting...</div>
+                </div>
+            </div>
+
+            <div class="section" id="section-quick-summary">
+                <div class="section-header" onclick="toggleSection('quick-summary')">
+                    <div class="section-title">
+                        <span>3. Quick Summary</span>
+                        <span class="status-badge status-pending" id="badge-quick-summary">Pending</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="section-content" id="content-quick-summary">
+                    <div id="data-quick-summary">Waiting...</div>
+                </div>
+            </div>
+
+            <div class="section" id="section-fetched-content">
+                <div class="section-header" onclick="toggleSection('fetched-content')">
+                    <div class="section-title">
+                        <span>4. Fetched Content</span>
+                        <span class="status-badge status-pending" id="badge-fetched-content">Pending</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="section-content" id="content-fetched-content">
+                    <pre id="data-fetched-content">Waiting...</pre>
+                </div>
+            </div>
+
+            <div class="section" id="section-comprehensive-summary">
+                <div class="section-header" onclick="toggleSection('comprehensive-summary')">
+                    <div class="section-title">
+                        <span>5. Comprehensive Summary</span>
+                        <span class="status-badge status-pending" id="badge-comprehensive-summary">Pending</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="section-content" id="content-comprehensive-summary">
+                    <div id="data-comprehensive-summary">Waiting...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let eventSource = null;
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function renderMarkdown(text) {
+            // Simple markdown-to-HTML converter
+            let html = text;
+
+            // Headers (##, ###)
+            html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+            // Bold
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+            // Italic
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+
+            // Bullet lists
+            html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+
+            // Fix multiple ul tags
+            html = html.replace(/<\/ul>\s*<ul>/g, '');
+
+            // Numbered lists
+            html = html.replace(/^\d+\.\s(.+)$/gim, '<li>$1</li>');
+
+            // Line breaks
+            html = html.replace(/\n\n/g, '</p><p>');
+            html = html.replace(/^(?!<[h|u|l])/gim, '<p>');
+            html = html.replace(/(?!<\/[h|u|l])$/gim, '</p>');
+
+            // Clean up extra p tags
+            html = html.replace(/<p><\/p>/g, '');
+            html = html.replace(/<p>(<[h|u])/g, '$1');
+            html = html.replace(/(<\/[h|u|l].*>)<\/p>/g, '$1');
+
+            return html;
+        }
+
+        function toggleSection(sectionId) {
+            const section = document.getElementById(`section-${sectionId}`);
+            section.classList.toggle('expanded');
+        }
+
+        function toggleArrayItem(itemId) {
+            const item = document.getElementById(itemId);
+            item.classList.toggle('expanded');
+        }
+
+        function clearResults() {
+            const progressContainer = document.getElementById('progressContainer');
+            progressContainer.classList.remove('active');
+            resetUI();
+
+            // Close SSE connection if active
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+
+            // Re-enable search button
+            const searchBtn = document.getElementById('searchBtn');
+            const btnText = document.getElementById('btnText');
+            searchBtn.disabled = false;
+            btnText.textContent = 'Research';
+        }
+
+        function updateSection(sectionId, status, data = null) {
+            const section = document.getElementById(`section-${sectionId}`);
+            const badge = document.getElementById(`badge-${sectionId}`);
+            const content = document.getElementById(`data-${sectionId}`);
+
+            // Remove old status classes
+            section.classList.remove('active', 'completed');
+            badge.classList.remove('status-pending', 'status-active', 'status-completed');
+
+            // Add new status
+            if (status === 'active') {
+                section.classList.add('active');
+                badge.classList.add('status-active');
+                badge.innerHTML = '<span class="spinner"></span> Processing...';
+            } else if (status === 'completed') {
+                section.classList.add('completed');
+                badge.classList.add('status-completed');
+                badge.textContent = 'Completed';
+            }
+
+            // Update content
+            if (data !== null) {
+                if (typeof data === 'string') {
+                    content.textContent = data;
+                } else {
+                    content.innerHTML = data;
+                }
+                // Auto-expand only for non-summary sections (array data)
+                if (sectionId === 'search-results' || sectionId === 'fetched-content') {
+                    section.classList.add('expanded');
+                }
+                // Keep summaries collapsed by default
+            }
+        }
+
+        function resetUI() {
+            const sections = ['optimized-query', 'search-results', 'quick-summary', 'fetched-content', 'comprehensive-summary'];
+            sections.forEach(sectionId => {
+                const section = document.getElementById(`section-${sectionId}`);
+                const badge = document.getElementById(`badge-${sectionId}`);
+                const content = document.getElementById(`data-${sectionId}`);
+
+                section.classList.remove('active', 'completed', 'expanded');
+                badge.classList.remove('status-active', 'status-completed');
+                badge.classList.add('status-pending');
+                badge.textContent = 'Pending';
+
+                // Reset content
+                if (sectionId === 'optimized-query') {
+                    content.textContent = 'Waiting...';
+                } else {
+                    content.innerHTML = 'Waiting...';
+                }
+            });
+        }
+
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const topic = document.getElementById('topicInput').value;
+            const count = document.getElementById('countInput').value;
+            const searchBtn = document.getElementById('searchBtn');
+            const btnText = document.getElementById('btnText');
+            const progressContainer = document.getElementById('progressContainer');
+
+            // Reset UI
+            resetUI();
+            progressContainer.classList.add('active');
+
+            // Disable form
+            searchBtn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span> Researching...';
+
+            // Close existing connection
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            // Create SSE connection
+            eventSource = new EventSource(`/api/research/stream?topic=${encodeURIComponent(topic)}&count=${count}`);
+
+            eventSource.addEventListener('step', function(e) {
+                const step = e.data;
+                console.log('Step:', step);
+
+                // Mark current step as active
+                if (step === 'optimizing_query') {
+                    updateSection('optimized-query', 'active');
+                } else if (step === 'searching') {
+                    updateSection('optimized-query', 'completed');
+                    updateSection('search-results', 'active');
+                } else if (step === 'quick_summary') {
+                    updateSection('quick-summary', 'active');
+                } else if (step === 'fetching_content') {
+                    updateSection('search-results', 'completed');
+                    updateSection('fetched-content', 'active');
+                } else if (step === 'comprehensive_summary') {
+                    updateSection('fetched-content', 'completed');
+                    updateSection('comprehensive-summary', 'active');
+                }
+            });
+
+            eventSource.addEventListener('optimized_query', function(e) {
+                updateSection('optimized-query', 'completed', e.data);
+            });
+
+            eventSource.addEventListener('search_results', function(e) {
+                const results = JSON.parse(e.data);
+                console.log('Processing search results:', results.results.length);
+
+                // Get the container element
+                const dataElement = document.getElementById('data-search-results');
+                dataElement.innerHTML = ''; // Clear existing content
+
+                // Build HTML structure
+                const container = document.createElement('div');
+                container.className = 'array-container';
+
+                results.results.forEach((r, i) => {
+                    const arrayItem = document.createElement('div');
+                    arrayItem.className = 'array-item'; // NOT expanded by default
+                    arrayItem.id = `search-item-${i}`;
+
+                    const header = document.createElement('div');
+                    header.className = 'array-item-header';
+                    header.onclick = () => toggleArrayItem(`search-item-${i}`);
+
+                    const titleSpan = document.createElement('span');
+                    titleSpan.innerHTML = `<strong>${i + 1}.</strong> ${escapeHtml(r.title)}`;
+
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'array-expand-icon';
+                    iconSpan.textContent = '▼';
+
+                    header.appendChild(titleSpan);
+                    header.appendChild(iconSpan);
+
+                    const content = document.createElement('div');
+                    content.className = 'array-item-content'; // This will be display:none by default
+                    content.innerHTML = `
+                        <p><strong>URL:</strong> <a href="${escapeHtml(r.url)}" target="_blank">${escapeHtml(r.url)}</a></p>
+                        <p><strong>Snippet:</strong></p>
+                        <pre>${escapeHtml(r.content || 'No snippet available')}</pre>
+                    `;
+
+                    arrayItem.appendChild(header);
+                    arrayItem.appendChild(content);
+                    container.appendChild(arrayItem);
+                });
+
+                // Append the container
+                dataElement.appendChild(container);
+                console.log('Search results rendered, array items should be collapsed');
+
+                // Update section status
+                const section = document.getElementById('section-search-results');
+                section.classList.add('completed', 'expanded');
+                const badge = document.getElementById('badge-search-results');
+                badge.classList.remove('status-pending', 'status-active');
+                badge.classList.add('status-completed');
+                badge.textContent = 'Completed';
+            });
+
+            eventSource.addEventListener('quick_summary', function(e) {
+                const markdown = e.data;
+                const html = renderMarkdown(markdown);
+
+                const dataElement = document.getElementById('data-quick-summary');
+                dataElement.innerHTML = `<div class="markdown-content">${html}</div>`;
+
+                const section = document.getElementById('section-quick-summary');
+                section.classList.add('completed');
+                const badge = document.getElementById('badge-quick-summary');
+                badge.classList.remove('status-pending', 'status-active');
+                badge.classList.add('status-completed');
+                badge.textContent = 'Completed';
+            });
+
+            eventSource.addEventListener('contents_array', function(e) {
+                const contents = JSON.parse(e.data);
+
+                // Build HTML structure
+                const container = document.createElement('div');
+                container.className = 'array-container';
+
+                contents.forEach((content, i) => {
+                    const preview = content.substring(0, 100) + (content.length > 100 ? '...' : '');
+
+                    const arrayItem = document.createElement('div');
+                    arrayItem.className = 'array-item';
+                    arrayItem.id = `content-item-${i}`;
+
+                    const header = document.createElement('div');
+                    header.className = 'array-item-header';
+                    header.onclick = () => toggleArrayItem(`content-item-${i}`);
+
+                    const titleSpan = document.createElement('span');
+                    titleSpan.innerHTML = `<strong>Source ${i + 1}</strong> - ${escapeHtml(preview)}`;
+
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'array-expand-icon';
+                    iconSpan.textContent = '▼';
+
+                    header.appendChild(titleSpan);
+                    header.appendChild(iconSpan);
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'array-item-content';
+
+                    const pre = document.createElement('pre');
+                    pre.textContent = content;
+                    contentDiv.appendChild(pre);
+
+                    arrayItem.appendChild(header);
+                    arrayItem.appendChild(contentDiv);
+                    container.appendChild(arrayItem);
+                });
+
+                const dataElement = document.getElementById('data-fetched-content');
+                dataElement.innerHTML = '';
+                dataElement.appendChild(container);
+
+                const section = document.getElementById('section-fetched-content');
+                section.classList.add('completed', 'expanded');
+                const badge = document.getElementById('badge-fetched-content');
+                badge.classList.remove('status-pending', 'status-active');
+                badge.classList.add('status-completed');
+                badge.textContent = 'Completed';
+            });
+
+            eventSource.addEventListener('comprehensive_summary', function(e) {
+                const markdown = e.data;
+                const html = renderMarkdown(markdown);
+
+                const dataElement = document.getElementById('data-comprehensive-summary');
+                dataElement.innerHTML = `<div class="markdown-content">${html}</div>`;
+
+                const section = document.getElementById('section-comprehensive-summary');
+                section.classList.add('completed');
+                const badge = document.getElementById('badge-comprehensive-summary');
+                badge.classList.remove('status-pending', 'status-active');
+                badge.classList.add('status-completed');
+                badge.textContent = 'Completed';
+            });
+
+            eventSource.addEventListener('complete', function(e) {
+                console.log('Research complete!');
+                eventSource.close();
+                searchBtn.disabled = false;
+                btnText.textContent = 'Research';
+            });
+
+            eventSource.addEventListener('error', function(e) {
+                console.error('SSE Error:', e);
+                const errorMsg = e.data || 'An error occurred during research';
+
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = 'Error: ' + errorMsg;
+                progressContainer.appendChild(errorDiv);
+
+                eventSource.close();
+                searchBtn.disabled = false;
+                btnText.textContent = 'Research';
+            });
+
+            eventSource.onerror = function(e) {
+                console.error('Connection error:', e);
+                eventSource.close();
+                searchBtn.disabled = false;
+                btnText.textContent = 'Research';
+            };
+        });
+    </script>
+</body>
+</html>

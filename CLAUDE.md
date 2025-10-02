@@ -33,31 +33,37 @@ The service follows a **Spring Boot microservice architecture** with LangChain4j
 ### Core Components:
 
 **REST Layer:**
-- **ResearchController**: REST API endpoint at `/api/research`
+- **ResearchController**: REST API endpoints at `/api/research` (standard JSON) and `/api/research/stream` (SSE streaming)
 
 **Service Layer:**
-- **ResearchOrchestrator**: Spring `@Service` that coordinates the research workflow
+- **ResearchOrchestrator**: Spring `@Service` that coordinates the research workflow with async processing and SSE support
 
 **Agents (LangChain4j AiService interfaces):**
-- **ResearchAgent**: Agent interface (future use for LLM-based orchestration)
-- **SummarizingAgent**: LLM agent for content summarization with grounded prompts
+- **QueryOptimizerAgent**: AI-powered search query refinement for better results
+- **QuickSummaryAgent**: Fast preliminary summarization from search snippets
+- **SummarizingAgent**: Comprehensive summarization from full content
 
 **Tools (LangChain4j @Tool implementations):**
 - **WebSearchTool**: Direct MCP web server communication with integrated JSON parsing
-- **ContentFetcherTool**: Self-contained parallel web content fetching with Java HttpClient and JSoup
+- **ContentFetcherTool**: Self-contained parallel web content fetching with Java HttpClient and JSoup, includes content cleaning and main content extraction
 
 **Configuration:**
-- **AgentConfiguration**: Spring `@Configuration` for beans (ChatLanguageModel, tools, agents)
+- **OllamaConfiguration**: Spring `@Configuration` for beans (ChatLanguageModel, tools, agents)
 
 **Model Classes:**
-- **SearchResult** and **ResearchResult**: Data transfer objects
+- **SearxngResult**, **SearxngResponse**, and **ResearchResult**: Data transfer objects
+
+**Web UI:**
+- **index.html**: Interactive web interface with real-time SSE progress tracking, collapsible sections, and markdown rendering
 
 ### Workflow:
-1. REST API request → **ResearchController**
-2. **ResearchOrchestrator** → **WebSearchTool** (find URLs for topic)
-3. **ResearchOrchestrator** → **ContentFetcherTool** (fetch content from URLs)
-4. **ResearchOrchestrator** → **SummarizingAgent** (summarize all content)
-5. JSON response with research results
+1. REST API request → **ResearchController** (standard JSON or SSE streaming)
+2. **ResearchOrchestrator** → **QueryOptimizerAgent** (AI-powered query optimization)
+3. **ResearchOrchestrator** → **WebSearchTool** (search with optimized query)
+4. **ResearchOrchestrator** → **QuickSummaryAgent** (async preliminary summary from snippets)
+5. **ResearchOrchestrator** → **ContentFetcherTool** (parallel full content fetching with cleaning)
+6. **ResearchOrchestrator** → **SummarizingAgent** (comprehensive summary from full content)
+7. JSON response with complete research results (or SSE events for streaming)
 
 ### Configuration Properties:
 - **server.port**: 8080
@@ -84,8 +90,14 @@ mvn test
 # Run Spring Boot application
 mvn spring-boot:run
 
-# Test the API
+# Test the API (standard endpoint)
 curl "http://localhost:8080/api/research?topic=artificial%20intelligence&count=5"
+
+# Test the streaming endpoint (SSE)
+curl -N "http://localhost:8080/api/research/stream?topic=artificial%20intelligence&count=5"
+
+# Access the web UI
+open http://localhost:8080
 
 # Package JAR
 mvn clean package
@@ -111,6 +123,9 @@ docker-compose down
 
 # Test the API
 curl "http://localhost:8080/api/research?topic=why%20sugar%20is%20good&count=3"
+
+# Access the web UI
+open http://localhost:8080
 ```
 
 ### Docker Build Only
@@ -151,11 +166,13 @@ docker run -p 8080:8080 \
 - **Bean Lifecycle**: Spring manages all component lifecycles (no hanging threads)
 
 ### Workflow Implementation:
-1. **ResearchController**: REST API receives topic and count parameters
-2. **ResearchOrchestrator**: Coordinates workflow using injected tools and agents
-3. **WebSearchTool**: Direct MCP server communication with integrated JSON response parsing
-4. **ContentFetcherTool**: Self-contained parallel content fetching with Java HttpClient and JSoup
-5. **SummarizingAgent**: LLM agent with grounded summarization prompts
+1. **ResearchController**: REST API receives topic and count parameters, supports both standard JSON and SSE streaming responses
+2. **ResearchOrchestrator**: Coordinates async workflow using injected tools and agents, emits SSE events for progress updates
+3. **QueryOptimizerAgent**: AI-powered query optimization for better search results
+4. **WebSearchTool**: Direct MCP server communication with integrated JSON response parsing
+5. **QuickSummaryAgent**: Fast preliminary summarization from search snippets (runs async)
+6. **ContentFetcherTool**: Self-contained parallel content fetching with Java HttpClient and JSoup, includes intelligent content cleaning (removes headers, footers, navigation, ads, etc.)
+7. **SummarizingAgent**: Comprehensive LLM-powered summarization with updated @V annotation pattern
 
 ### Configuration:
 - Configuration properties in `application.properties`

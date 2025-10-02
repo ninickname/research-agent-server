@@ -42,6 +42,23 @@ public class ContentFetcherTool {
         this.executorService = Executors.newFixedThreadPool(threadPoolSize);
     }
 
+    @Tool("Fetch content from a single URL")
+    public String fetchSingleContent(String url) {
+        logger.info("ContentFetcherTool: Fetching content from URL: {}", url);
+        try {
+            String content = fetchContent(url);
+            if (content != null && !content.trim().isEmpty()) {
+                logger.info("ContentFetcherTool: Successfully fetched content from {}", url);
+                return content;
+            }
+            logger.warn("ContentFetcherTool: No content retrieved from {}", url);
+            return null;
+        } catch (Exception e) {
+            logger.error("ContentFetcherTool: Failed to fetch content from {}: {}", url, e.getMessage());
+            return null;
+        }
+    }
+
     @Tool("Fetch content from URLs in parallel")
     public List<String> fetchMultipleContents(List<String> urls) {
         logger.info("ContentFetcherTool: Fetching content from {} URLs", urls.size());
@@ -58,8 +75,8 @@ public class ContentFetcherTool {
             logger.info("ContentFetcherTool: Successfully fetched {} contents", contents.size());
             return contents;
         } catch (Exception e) {
-            logger.error("ContentFetcherTool: Failed to fetch multiple contents", e);
-            throw new RuntimeException("Content fetching failed: " + e.getMessage(), e);
+            logger.error("Failed to fetch content from {} URLs: {}", urls.size(), e.getMessage(), e);
+            throw new RuntimeException("Content fetching failed for " + urls.size() + " URLs: " + e.getMessage(), e);
         }
     }
 
@@ -112,11 +129,29 @@ public class ContentFetcherTool {
         try {
             Document doc = Jsoup.parse(html);
 
-            // Remove script and style elements
-            doc.select("script, style, nav, footer, header, aside").remove();
+            // Remove noise elements (headers, footers, navigation, ads, etc.)
+            doc.select("script, style, nav, footer, header, aside, " +
+                    ".header, .footer, .navigation, .nav, .menu, " +
+                    ".sidebar, .advertisement, .ad, .ads, " +
+                    ".social-share, .share, .comments, " +
+                    ".cookie-banner, .cookie-notice, " +
+                    ".popup, .modal, .overlay").remove();
 
-            // Get text content
-            String text = doc.body().text();
+            // Try to find main content area (prioritize article, main, or divs with content class)
+            String text;
+            var mainContent = doc.select("article, main, [role=main], .content, .post, .article-body").first();
+
+            if (mainContent != null) {
+                text = mainContent.text();
+                logger.debug("Extracted text from main content area for {}", url);
+            } else {
+                // Fallback to body if no main content found
+                text = doc.body().text();
+                logger.debug("No main content area found, using full body for {}", url);
+            }
+
+            // Remove common header/footer junk patterns from beginning and end
+            text = stripJunkFromEnds(text);
 
             // Limit content length and clean up
             if (text.length() > MAX_CONTENT_LENGTH) {
@@ -133,6 +168,45 @@ public class ContentFetcherTool {
             logger.warn("Failed to parse HTML from {}: {}", url, e.getMessage());
             return null;
         }
+    }
+
+    private String stripJunkFromEnds(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+
+        // Common junk patterns at the beginning
+        String[] startPatterns = {
+                "^(Skip to|Jump to|Go to) (main )?content\\s*",
+                "^Menu\\s+",
+                "^Navigation\\s+",
+                "^Home\\s+About\\s+Contact\\s*",
+                "^Cookie (Notice|Policy|Settings|Consent)\\s+.*?Accept.*?\\s+",
+                "^Sign in\\s+Register\\s+",
+                "^Subscribe\\s+.*?\\s+"
+        };
+
+        for (String pattern : startPatterns) {
+            text = text.replaceFirst("(?i)" + pattern, "");
+        }
+
+        // Common junk patterns at the end
+        String[] endPatterns = {
+                "\\s+(Copyright|©)\\s+\\d{4}.*$",
+                "\\s+All [Rr]ights [Rr]eserved.*$",
+                "\\s+Privacy Policy.*$",
+                "\\s+Terms (of Service|and Conditions).*$",
+                "\\s+Follow us on.*$",
+                "\\s+Share this.*$",
+                "\\s+Subscribe to.*$",
+                "\\s+Sign up for.*$"
+        };
+
+        for (String pattern : endPatterns) {
+            text = text.replaceFirst("(?i)" + pattern, "");
+        }
+
+        return text.trim();
     }
 
     public void shutdown() {
