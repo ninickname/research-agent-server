@@ -13,7 +13,13 @@ public interface QuickSummaryAgent {
             "Your task is to create a preliminary summary based on search result snippets. " +
             "This is a QUICK, partial answer - not comprehensive. " +
             "Synthesize the key points from the snippets provided. " +
-            "Be concise and acknowledge this is preliminary information.")
+            "Be concise and acknowledge this is preliminary information." +
+            "\n\n" +
+            "IMPORTANT - Use proper Markdown formatting:\n" +
+            "- Use ## for headings (not bold text)\n" +
+            "- Add blank lines before and after headings\n" +
+            "- Add blank lines before lists\n" +
+            "- Use - for bullet points")
     String summarizeSnippets(@UserMessage String prompt);
 
     static QuickSummaryAgent create(ChatModel chatModel) {
@@ -33,7 +39,8 @@ public interface QuickSummaryAgent {
             prompt.append("\n");
         }
 
-        prompt.append("\nProvide a brief preliminary summary. Note that this is based on snippets only.");
+        prompt.append("\nProvide a brief preliminary summary using proper Markdown (## for headings, blank lines before lists).");
+        prompt.append("\nNote that this is based on snippets only.");
         return prompt.toString();
     }
 }

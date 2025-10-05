@@ -19,14 +19,16 @@ public class ResearchController {
     @GetMapping
     public ResearchResult research(
             @RequestParam String topic,
-            @RequestParam(defaultValue = "5") int count) {
-        return researchOrchestrator.research(topic, count);
+            @RequestParam(defaultValue = "5") int count,
+            @RequestParam(defaultValue = "false") boolean skipContentFetch) {
+        return researchOrchestrator.research(topic, count, skipContentFetch);
     }
 
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamResearch(
             @RequestParam String topic,
-            @RequestParam(defaultValue = "5") int count) {
-        return researchOrchestrator.researchWithProgress(topic, count);
+            @RequestParam(defaultValue = "5") int count,
+            @RequestParam(defaultValue = "false") boolean skipContentFetch) {
+        return researchOrchestrator.researchWithProgress(topic, count, skipContentFetch);
     }
 }

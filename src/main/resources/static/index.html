@@ -19,194 +19,328 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1000px;
             margin: 0 auto;
-        }
-
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 90%;
-            }
         }
 
         .header {
             text-align: center;
             color: white;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 2.8em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 1.05em;
+            opacity: 0.95;
+            font-weight: 400;
         }
 
         .search-card {
             background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            margin-bottom: 20px;
         }
 
         .search-form {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .main-input-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
         }
 
         .search-input {
             flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: #fafafa;
         }
 
         .search-input:focus {
             outline: none;
             border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .count-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fafafa;
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            flex-wrap: wrap;
+        }
+
+        .count-control label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+            white-space: nowrap;
         }
 
         .count-input {
-            width: 100px;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
+            width: 50px;
+            padding: 6px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
             text-align: center;
+            font-weight: 600;
+        }
+
+        .count-presets {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 4px 10px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 35px;
+        }
+
+        .preset-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: #f3f4ff;
+        }
+
+        .preset-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
         }
 
         .search-btn {
-            padding: 15px 40px;
+            padding: 16px 36px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
-        .search-btn:hover {
+        .search-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .search-btn:active {
+        .search-btn:active:not(:disabled) {
             transform: translateY(0);
         }
 
         .search-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
 
         .progress-container {
             display: none;
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .progress-container.active {
             display: block;
         }
 
-        .section {
-            margin-bottom: 15px;
-            border: 2px solid #f0f0f0;
-            border-radius: 8px;
-            overflow: hidden;
+        /* Progress Tracker */
+        .progress-tracker {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            margin-bottom: 16px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 16px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            color: #9ca3af;
             transition: all 0.3s;
         }
 
-        .section.active {
+        .progress-step.active .step-circle {
             border-color: #667eea;
+            background: #667eea;
+            color: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
 
-        .section.completed {
-            border-color: #4caf50;
+        .progress-step.completed .step-circle {
+            border-color: #10b981;
+            background: #10b981;
+            color: white;
         }
 
-        .section-header {
-            padding: 15px 20px;
-            background: #f8f9fa;
+        .step-label {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 500;
+            text-align: center;
+            max-width: 80px;
+        }
+
+        .progress-step.active .step-label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .progress-step.completed .step-label {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        /* Section Cards */
+        /* Main sections as details elements */
+        details.section {
+            margin-bottom: 12px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s;
+        }
+
+        details.section:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        details.section summary.section-header {
+            padding: 16px 20px;
+            background: #fafafa;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
             user-select: none;
-            transition: background 0.3s;
+            transition: background 0.2s;
+            list-style: none;
         }
 
-        .section.active .section-header {
-            background: #e8eaf6;
+        details.section summary.section-header::-webkit-details-marker {
+            display: none;
         }
 
-        .section.completed .section-header {
-            background: #e8f5e9;
+        details.section summary.section-header::after {
+            content: "▶";
+            color: #9ca3af;
+            font-size: 12px;
+            transition: transform 0.3s;
         }
 
-        .section-header:hover {
-            background: #e9ecef;
+        details.section[open] summary.section-header::after {
+            transform: rotate(90deg);
+        }
+
+        details.section summary.section-header:hover {
+            background: #f3f4f6;
         }
 
         .section-title {
             font-weight: 600;
-            font-size: 16px;
-            color: #333;
+            font-size: 15px;
+            color: #1f2937;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background: #e0e0e0;
-            color: #666;
-        }
-
-        .status-active {
-            background: #667eea;
-            color: white;
-            animation: pulse 2s infinite;
-        }
-
-        .status-completed {
-            background: #4caf50;
-            color: white;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
         }
 
         .section-content {
-            display: none;
-            padding: 20px;
+            padding: 18px 20px;
             background: white;
             border-top: 1px solid #f0f0f0;
         }
 
-        .section.expanded .section-content {
-            display: block;
+        .info-banner {
+            background: #eff6ff;
+            border-left: 3px solid #3b82f6;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #1e40af;
+            margin-bottom: 12px;
         }
 
         .section-content pre {
@@ -281,6 +415,7 @@
             margin-top: 10px;
         }
 
+        /* Array items - always visible for searchability */
         .array-item {
             margin-bottom: 10px;
             border: 1px solid #e0e0e0;
@@ -291,40 +426,16 @@
         .array-item-header {
             padding: 12px 15px;
             background: #f8f9fa;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             user-select: none;
             font-weight: 500;
-            transition: background 0.2s;
-        }
-
-        .array-item-header:hover {
-            background: #e9ecef;
         }
 
         .array-item-content {
-            display: none;
             padding: 15px;
             background: white;
             border-top: 1px solid #e0e0e0;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .array-item.expanded .array-item-content {
-            display: block;
-        }
-
-        .array-expand-icon {
-            font-size: 16px;
-            color: #999;
-            transition: transform 0.3s;
-        }
-
-        .array-item.expanded .array-expand-icon {
-            transform: rotate(180deg);
+            max-height: none; /* Remove height limit for full searchability */
+            overflow-y: visible;
         }
 
         .array-item-content pre {
@@ -338,86 +449,447 @@
             margin: 0;
         }
 
+        .actions-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
         .clear-btn {
-            padding: 10px 25px;
-            background: #f44336;
+            padding: 10px 20px;
+            background: #ef4444;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
-            float: right;
-            margin-top: 15px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
         }
 
         .clear-btn:hover {
-            background: #d32f2f;
+            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+        }
+
+        .clear-btn:active {
+            transform: translateY(0);
         }
 
         .markdown-content {
-            line-height: 1.8;
-            color: #333;
+            line-height: 1.7;
+            color: #1f2937;
+            font-size: 15px;
+        }
+
+        .markdown-content > *:first-child {
+            margin-top: 0 !important;
+        }
+
+        .markdown-content > *:last-child {
+            margin-bottom: 0 !important;
         }
 
         .markdown-content h1 {
-            font-size: 1.8em;
-            margin: 20px 0 15px 0;
-            color: #2c3e50;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 8px;
+            font-size: 1.875em;
+            font-weight: 700;
+            margin: 24px 0 16px 0;
+            color: #111827;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            letter-spacing: -0.5px;
         }
 
         .markdown-content h2 {
             font-size: 1.5em;
-            margin: 18px 0 12px 0;
-            color: #34495e;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 6px;
+            font-weight: 700;
+            margin: 24px 0 14px 0;
+            color: #1f2937;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
         }
 
         .markdown-content h3 {
-            font-size: 1.3em;
-            margin: 15px 0 10px 0;
-            color: #4a5568;
+            font-size: 1.25em;
+            font-weight: 600;
+            margin: 20px 0 12px 0;
+            color: #374151;
+        }
+
+        .markdown-content h4 {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin: 16px 0 10px 0;
+            color: #4b5563;
         }
 
         .markdown-content p {
-            margin: 12px 0;
-            line-height: 1.8;
+            margin: 14px 0;
+            line-height: 1.75;
+            color: #374151;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin: 14px 0;
+            padding-left: 28px;
         }
 
         .markdown-content ul {
-            margin: 12px 0;
-            padding-left: 25px;
+            list-style-type: disc;
         }
 
-        .markdown-content ul li {
+        .markdown-content ul ul {
+            list-style-type: circle;
             margin: 8px 0;
-            line-height: 1.6;
         }
 
-        .markdown-content strong {
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        .markdown-content em {
-            font-style: italic;
-            color: #555;
+        .markdown-content ul ul ul {
+            list-style-type: square;
         }
 
         .markdown-content ol {
-            margin: 12px 0;
-            padding-left: 25px;
+            list-style-type: decimal;
         }
 
-        .markdown-content ol li {
+        .markdown-content li {
+            margin: 6px 0;
+            line-height: 1.7;
+            color: #374151;
+            padding-left: 4px;
+        }
+
+        .markdown-content li > p {
+            margin: 6px 0;
+        }
+
+        .markdown-content strong,
+        .markdown-content b {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .markdown-content em,
+        .markdown-content i {
+            font-style: italic;
+            color: #4b5563;
+        }
+
+        .markdown-content code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            color: #dc2626;
+            border: 1px solid #e5e7eb;
+        }
+
+        .markdown-content pre {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid #374151;
+        }
+
+        .markdown-content pre code {
+            background: transparent;
+            padding: 0;
+            border: none;
+            color: #f3f4f6;
+            font-size: 0.9em;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 16px;
+            margin: 16px 0;
+            color: #4b5563;
+            font-style: italic;
+            background: #f9fafb;
+            padding: 12px 16px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .markdown-content blockquote p {
             margin: 8px 0;
+        }
+
+        .markdown-content a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .markdown-content a:hover {
+            border-bottom-color: #667eea;
+        }
+
+        .markdown-content hr {
+            border: none;
+            border-top: 2px solid #e5e7eb;
+            margin: 24px 0;
+        }
+
+        .markdown-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 16px 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .markdown-content table th {
+            background: #f3f4f6;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #111827;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .markdown-content table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #374151;
+        }
+
+        .markdown-content table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .markdown-content table tr:hover {
+            background: #f9fafb;
+        }
+
+        /* Structured Content Styles */
+        .structured-content-display {
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .content-url {
+            background: #f0f9ff;
+            border-left: 3px solid #3b82f6;
+            padding: 10px 12px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .content-url a {
+            color: #2563eb;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .content-url a:hover {
+            text-decoration: underline;
+        }
+
+        .content-main-heading {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 16px 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        /* Details/Summary (collapsible sections) */
+        details.content-section {
+            margin-bottom: 16px;
+            padding: 0;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            overflow: hidden;
+        }
+
+        details.content-section[open] {
+            padding-bottom: 14px;
+        }
+
+        details.content-section summary.section-heading {
+            font-size: 15px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0;
+            padding: 14px;
+            cursor: pointer;
+            user-select: none;
+            background: #f3f4f6;
+            transition: background 0.2s;
+            list-style: none;
+        }
+
+        details.content-section summary.section-heading::-webkit-details-marker {
+            display: none;
+        }
+
+        details.content-section summary.section-heading::before {
+            content: "▶";
+            display: inline-block;
+            margin-right: 8px;
+            transition: transform 0.2s;
+            color: #667eea;
+            font-size: 12px;
+        }
+
+        details.content-section[open] summary.section-heading::before {
+            transform: rotate(90deg);
+        }
+
+        details.content-section summary.section-heading:hover {
+            background: #e5e7eb;
+        }
+
+        .section-body {
+            padding: 0 14px;
+        }
+
+        .section-content {
+            color: #4b5563;
+            margin: 12px 0 10px 0;
+            line-height: 1.7;
+        }
+
+        /* Subsection Styles (nested details) */
+        details.content-subsection {
+            margin: 12px 0 8px 12px;
+            padding: 0;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #a78bfa;
+            overflow: hidden;
+        }
+
+        details.content-subsection[open] {
+            padding-bottom: 10px;
+        }
+
+        details.content-subsection summary.subsection-heading {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b21a8;
+            margin: 0;
+            padding: 10px 12px;
+            cursor: pointer;
+            user-select: none;
+            background: #faf5ff;
+            transition: background 0.2s;
+            list-style: none;
+        }
+
+        details.content-subsection summary.subsection-heading::-webkit-details-marker {
+            display: none;
+        }
+
+        details.content-subsection summary.subsection-heading::before {
+            content: "▶";
+            display: inline-block;
+            margin-right: 6px;
+            transition: transform 0.2s;
+            color: #a78bfa;
+            font-size: 10px;
+        }
+
+        details.content-subsection[open] summary.subsection-heading::before {
+            transform: rotate(90deg);
+        }
+
+        details.content-subsection summary.subsection-heading:hover {
+            background: #f3e8ff;
+        }
+
+        .subsection-body {
+            padding: 0 12px;
+        }
+
+        .subsection-content {
+            color: #6b7280;
+            margin: 10px 0 8px 0;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        .subsection-key-points {
+            margin-top: 8px;
+        }
+
+        .subsection-key-points li {
+            font-size: 13px;
+            color: #374151;
+        }
+
+        .subsection-key-points li::before {
+            content: "→";
+            color: #a78bfa;
+        }
+
+        .key-points {
+            margin: 12px 0 0 0;
+            padding-left: 20px;
+            list-style-type: none;
+        }
+
+        .key-points li {
+            position: relative;
+            padding-left: 20px;
+            margin: 6px 0;
+            color: #1f2937;
             line-height: 1.6;
         }
+
+        .key-points li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .content-stats {
+            margin-top: 16px;
+            padding: 10px;
+            background: #fffbeb;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #92400e;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .structured-content-item .array-item-content {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        /* Results Summary */
+        .results-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .results-summary strong {
+            font-weight: 600;
+        }
     </style>
+    <!-- Marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -428,101 +900,171 @@
 
         <div class="search-card">
             <form class="search-form" id="searchForm">
-                <input
-                    type="text"
-                    class="search-input"
-                    id="topicInput"
-                    placeholder="Enter a topic to research (e.g., artificial intelligence, climate change, quantum computing)"
-                    required
-                >
-                <input
-                    type="number"
-                    class="count-input"
-                    id="countInput"
-                    value="5"
-                    min="1"
-                    max="10"
-                    title="Number of results"
-                >
-                <button type="submit" class="search-btn" id="searchBtn">
-                    <span id="btnText">Research</span>
-                </button>
+                <div class="main-input-row">
+                    <input
+                        type="text"
+                        class="search-input"
+                        id="topicInput"
+                        placeholder="What would you like to research? (e.g., artificial intelligence, climate change)"
+                        value="java is cool"
+                        required
+                    >
+                    <button type="submit" class="search-btn" id="searchBtn">
+                        <span id="btnText">Research</span>
+                    </button>
+                </div>
+                <div class="count-control">
+                    <label for="countInput">Sources:</label>
+                    <input
+                        type="number"
+                        class="count-input"
+                        id="countInput"
+                        value="5"
+                        min="1"
+                        max="100"
+                    >
+                    <div class="count-presets">
+                        <button type="button" class="preset-btn active" data-value="5">5</button>
+                        <button type="button" class="preset-btn" data-value="10">10</button>
+                        <button type="button" class="preset-btn" data-value="20">20</button>
+                        <button type="button" class="preset-btn" data-value="50">50</button>
+                        <button type="button" class="preset-btn" data-value="100">100</button>
+                    </div>
+                </div>
             </form>
         </div>
 
         <div class="progress-container" id="progressContainer">
-            <button class="clear-btn" id="clearBtn" onclick="clearResults()">Clear Results</button>
-            <div style="clear: both;"></div>
-
-            <div class="section" id="section-optimized-query">
-                <div class="section-header" onclick="toggleSection('optimized-query')">
-                    <div class="section-title">
-                        <span>1. Optimized Query</span>
-                        <span class="status-badge status-pending" id="badge-optimized-query">Pending</span>
+            <!-- Progress Tracker -->
+            <div class="progress-tracker">
+                <div class="progress-steps">
+                    <div class="progress-line">
+                        <div class="progress-line-fill" id="progressLineFill"></div>
                     </div>
-                    <span class="expand-icon">▼</span>
+                    <div class="progress-step" id="step-1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Optimize Query</div>
+                    </div>
+                    <div class="progress-step" id="step-2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label" id="step-2-label">Search Web</div>
+                    </div>
+                    <div class="progress-step" id="step-3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Quick Summary</div>
+                    </div>
+                    <div class="progress-step" id="step-4">
+                        <div class="step-circle">4</div>
+                        <div class="step-label" id="step-4-label">Fetch Content</div>
+                    </div>
+                    <div class="progress-step" id="step-5">
+                        <div class="step-circle">5</div>
+                        <div class="step-label">Final Summary</div>
+                    </div>
                 </div>
+            </div>
+
+            <div class="actions-bar">
+                <button class="clear-btn" id="clearBtn" onclick="clearResults()">✕ Clear Results</button>
+            </div>
+
+            <details class="section" id="section-optimized-query" open>
+                <summary class="section-header">
+                    <div class="section-title">
+                        <span class="section-icon">🎯</span>
+                        <span>Optimized Query</span>
+                    </div>
+                </summary>
                 <div class="section-content" id="content-optimized-query">
                     <pre id="data-optimized-query">Waiting...</pre>
                 </div>
-            </div>
+            </details>
 
-            <div class="section" id="section-search-results">
-                <div class="section-header" onclick="toggleSection('search-results')">
+            <details class="section" id="section-search-results" open>
+                <summary class="section-header">
                     <div class="section-title">
-                        <span>2. Search Results</span>
-                        <span class="status-badge status-pending" id="badge-search-results">Pending</span>
+                        <span class="section-icon">🔍</span>
+                        <span>Search Results</span>
                     </div>
-                    <span class="expand-icon">▼</span>
-                </div>
+                </summary>
                 <div class="section-content" id="content-search-results">
                     <div id="data-search-results">Waiting...</div>
                 </div>
-            </div>
+            </details>
 
-            <div class="section" id="section-quick-summary">
-                <div class="section-header" onclick="toggleSection('quick-summary')">
+            <details class="section" id="section-quick-summary" open>
+                <summary class="section-header">
                     <div class="section-title">
-                        <span>3. Quick Summary</span>
-                        <span class="status-badge status-pending" id="badge-quick-summary">Pending</span>
+                        <span class="section-icon">⚡</span>
+                        <span>Quick Summary</span>
                     </div>
-                    <span class="expand-icon">▼</span>
-                </div>
+                </summary>
                 <div class="section-content" id="content-quick-summary">
+                    <div class="info-banner">⏱️ Preliminary summary based on search snippets (full analysis below)</div>
                     <div id="data-quick-summary">Waiting...</div>
                 </div>
-            </div>
+            </details>
 
-            <div class="section" id="section-fetched-content">
-                <div class="section-header" onclick="toggleSection('fetched-content')">
+            <details class="section" id="section-fetched-content" open>
+                <summary class="section-header">
                     <div class="section-title">
-                        <span>4. Fetched Content</span>
-                        <span class="status-badge status-pending" id="badge-fetched-content">Pending</span>
+                        <span class="section-icon">📄</span>
+                        <span>Fetched Content</span>
                     </div>
-                    <span class="expand-icon">▼</span>
-                </div>
+                </summary>
                 <div class="section-content" id="content-fetched-content">
                     <pre id="data-fetched-content">Waiting...</pre>
                 </div>
-            </div>
+            </details>
 
-            <div class="section" id="section-comprehensive-summary">
-                <div class="section-header" onclick="toggleSection('comprehensive-summary')">
+            <details class="section" id="section-comprehensive-summary" open>
+                <summary class="section-header">
                     <div class="section-title">
-                        <span>5. Comprehensive Summary</span>
-                        <span class="status-badge status-pending" id="badge-comprehensive-summary">Pending</span>
+                        <span class="section-icon">📊</span>
+                        <span>Comprehensive Summary</span>
                     </div>
-                    <span class="expand-icon">▼</span>
-                </div>
+                </summary>
                 <div class="section-content" id="content-comprehensive-summary">
                     <div id="data-comprehensive-summary">Waiting...</div>
                 </div>
-            </div>
+            </details>
         </div>
     </div>
 
     <script>
         let eventSource = null;
+
+        // Handle preset button clicks
+        document.addEventListener('DOMContentLoaded', () => {
+            const countInput = document.getElementById('countInput');
+            const presetBtns = document.querySelectorAll('.preset-btn');
+
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const value = btn.getAttribute('data-value');
+
+                    // Update input value
+                    countInput.value = value;
+
+                    // Update active state
+                    presetBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+
+            // Update active button when input changes manually
+            countInput.addEventListener('input', () => {
+                const value = countInput.value;
+                presetBtns.forEach(btn => {
+                    if (btn.getAttribute('data-value') === value) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            });
+        });
 
         function escapeHtml(text) {
             const div = document.createElement('div');
@@ -530,55 +1072,124 @@
             return div.innerHTML;
         }
 
-        function renderMarkdown(text) {
-            // Simple markdown-to-HTML converter
-            let html = text;
+        function buildStructuredContentHTML(item) {
+            let html = '<div class="structured-content-display">';
 
-            // Headers (##, ###)
-            html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-            html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-            html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            // URL with metadata badges
+            html += `<div class="content-url"><strong>🔗 Source:</strong> <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.url)}</a>`;
 
-            // Bold
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+            // Add engine and score badges
+            if (item.engine || (item.score !== null && item.score !== undefined)) {
+                html += '<div style="margin-top: 8px;">';
+                if (item.engine) {
+                    html += `<span style="background: #667eea; color: white; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; margin-right: 8px;">${escapeHtml(item.engine)}</span>`;
+                }
+                if (item.score !== null && item.score !== undefined) {
+                    html += `<span style="background: #10b981; color: white; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 500;">Score: ${item.score.toFixed(2)}</span>`;
+                }
+                html += '</div>';
+            }
 
-            // Italic
-            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+            html += '</div>';
 
-            // Bullet lists
-            html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');
-            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            // Main heading if exists
+            if (item.mainHeading) {
+                html += `<h2 class="content-main-heading">${escapeHtml(item.mainHeading)}</h2>`;
+            }
 
-            // Fix multiple ul tags
-            html = html.replace(/<\/ul>\s*<ul>/g, '');
+            // Sections as collapsible details
+            if (item.sections && item.sections.length > 0) {
+                item.sections.forEach((section, idx) => {
+                    html += '<details class="content-section" open>';
 
-            // Numbered lists
-            html = html.replace(/^\d+\.\s(.+)$/gim, '<li>$1</li>');
+                    // Summary (heading)
+                    html += '<summary class="section-heading">';
+                    if (section.heading) {
+                        html += escapeHtml(section.heading);
+                    } else {
+                        html += `Section ${idx + 1}`;
+                    }
+                    html += '</summary>';
 
-            // Line breaks
-            html = html.replace(/\n\n/g, '</p><p>');
-            html = html.replace(/^(?!<[h|u|l])/gim, '<p>');
-            html = html.replace(/(?!<\/[h|u|l])$/gim, '</p>');
+                    // Section content
+                    html += '<div class="section-body">';
 
-            // Clean up extra p tags
-            html = html.replace(/<p><\/p>/g, '');
-            html = html.replace(/<p>(<[h|u])/g, '$1');
-            html = html.replace(/(<\/[h|u|l].*>)<\/p>/g, '$1');
+                    if (section.content) {
+                        html += `<div class="section-content markdown-content">${renderMarkdown(section.content)}</div>`;
+                    }
 
+                    if (section.keyPoints && section.keyPoints.length > 0) {
+                        html += '<ul class="key-points">';
+                        section.keyPoints.forEach(point => {
+                            html += `<li>${escapeHtml(point)}</li>`;
+                        });
+                        html += '</ul>';
+                    }
+
+                    // Subsections as nested details
+                    if (section.subSections && section.subSections.length > 0) {
+                        section.subSections.forEach(subSection => {
+                            html += '<details class="content-subsection">';
+
+                            html += '<summary class="subsection-heading">';
+                            if (subSection.heading) {
+                                html += escapeHtml(subSection.heading);
+                            } else {
+                                html += 'Subsection';
+                            }
+                            html += '</summary>';
+
+                            html += '<div class="subsection-body">';
+
+                            if (subSection.content) {
+                                html += `<div class="subsection-content markdown-content">${renderMarkdown(subSection.content)}</div>`;
+                            }
+
+                            if (subSection.keyPoints && subSection.keyPoints.length > 0) {
+                                html += '<ul class="key-points subsection-key-points">';
+                                subSection.keyPoints.forEach(point => {
+                                    html += `<li>${escapeHtml(point)}</li>`;
+                                });
+                                html += '</ul>';
+                            }
+
+                            html += '</div>'; // subsection-body
+                            html += '</details>';
+                        });
+                    }
+
+                    html += '</div>'; // section-body
+                    html += '</details>';
+                });
+            }
+
+            // Stats footer
+            const totalChars = item.totalCharacters || 0;
+            const sectionsCount = item.sections ? item.sections.length : 0;
+            html += `<div class="content-stats">📊 ${totalChars.toLocaleString()} characters • ${sectionsCount} section${sectionsCount !== 1 ? 's' : ''}</div>`;
+
+            html += '</div>';
             return html;
         }
 
-        function toggleSection(sectionId) {
-            const section = document.getElementById(`section-${sectionId}`);
-            section.classList.toggle('expanded');
+        function renderMarkdown(text) {
+            // Use marked.js library for proper markdown rendering
+            if (typeof marked !== 'undefined') {
+                // Configure marked for better rendering
+                marked.setOptions({
+                    breaks: true,        // Convert \n to <br>
+                    gfm: true,          // GitHub Flavored Markdown
+                    headerIds: false,   // Don't add IDs to headers
+                    mangle: false       // Don't mangle email addresses
+                });
+                return marked.parse(text);
+            }
+
+            // Fallback if marked is not loaded (shouldn't happen)
+            return text.replace(/\n/g, '<br>');
         }
 
-        function toggleArrayItem(itemId) {
-            const item = document.getElementById(itemId);
-            item.classList.toggle('expanded');
-        }
+        // toggleSection and toggleArrayItem removed - now using native <details> elements
 
         function clearResults() {
             const progressContainer = document.getElementById('progressContainer');
@@ -598,25 +1209,9 @@
             btnText.textContent = 'Research';
         }
 
-        function updateSection(sectionId, status, data = null) {
+        function updateSection(sectionId, data = null, autoExpand = false) {
             const section = document.getElementById(`section-${sectionId}`);
-            const badge = document.getElementById(`badge-${sectionId}`);
             const content = document.getElementById(`data-${sectionId}`);
-
-            // Remove old status classes
-            section.classList.remove('active', 'completed');
-            badge.classList.remove('status-pending', 'status-active', 'status-completed');
-
-            // Add new status
-            if (status === 'active') {
-                section.classList.add('active');
-                badge.classList.add('status-active');
-                badge.innerHTML = '<span class="spinner"></span> Processing...';
-            } else if (status === 'completed') {
-                section.classList.add('completed');
-                badge.classList.add('status-completed');
-                badge.textContent = 'Completed';
-            }
 
             // Update content
             if (data !== null) {
@@ -625,25 +1220,41 @@
                 } else {
                     content.innerHTML = data;
                 }
-                // Auto-expand only for non-summary sections (array data)
-                if (sectionId === 'search-results' || sectionId === 'fetched-content') {
-                    section.classList.add('expanded');
+
+                // Auto-expand if specified
+                if (autoExpand) {
+                    section.setAttribute('open', '');
                 }
-                // Keep summaries collapsed by default
             }
         }
+
+        function updateProgressTracker(stepNumber, status) {
+            const step = document.getElementById(`step-${stepNumber}`);
+            const progressFill = document.getElementById('progressLineFill');
+
+            if (status === 'active') {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else if (status === 'completed') {
+                step.classList.remove('active');
+                step.classList.add('completed');
+            }
+
+            // Update progress line fill
+            const completedSteps = document.querySelectorAll('.progress-step.completed').length;
+            const percentage = (completedSteps / 5) * 100;
+            progressFill.style.width = percentage + '%';
+        }
+
+        let requestedSourceCount = 5; // Track requested source count
 
         function resetUI() {
             const sections = ['optimized-query', 'search-results', 'quick-summary', 'fetched-content', 'comprehensive-summary'];
             sections.forEach(sectionId => {
                 const section = document.getElementById(`section-${sectionId}`);
-                const badge = document.getElementById(`badge-${sectionId}`);
                 const content = document.getElementById(`data-${sectionId}`);
 
-                section.classList.remove('active', 'completed', 'expanded');
-                badge.classList.remove('status-active', 'status-completed');
-                badge.classList.add('status-pending');
-                badge.textContent = 'Pending';
+                section.classList.remove('expanded');
 
                 // Reset content
                 if (sectionId === 'optimized-query') {
@@ -652,13 +1263,25 @@
                     content.innerHTML = 'Waiting...';
                 }
             });
+
+            // Reset progress tracker
+            for (let i = 1; i <= 5; i++) {
+                const step = document.getElementById(`step-${i}`);
+                step.classList.remove('active', 'completed');
+            }
+            document.getElementById('progressLineFill').style.width = '0%';
+
+            // Reset step labels
+            document.getElementById('step-2-label').textContent = 'Search Web';
+            document.getElementById('step-4-label').textContent = 'Fetch Content';
         }
 
         document.getElementById('searchForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const topic = document.getElementById('topicInput').value;
-            const count = document.getElementById('countInput').value;
+            const count = parseInt(document.getElementById('countInput').value);
+            requestedSourceCount = count; // Store for later use
             const searchBtn = document.getElementById('searchBtn');
             const btnText = document.getElementById('btnText');
             const progressContainer = document.getElementById('progressContainer');
@@ -666,6 +1289,10 @@
             // Reset UI
             resetUI();
             progressContainer.classList.add('active');
+
+            // Update step labels with source count
+            document.getElementById('step-2-label').textContent = `Search (${count} sources)`;
+            document.getElementById('step-4-label').textContent = `Fetch (${count} sources)`;
 
             // Disable form
             searchBtn.disabled = true;
@@ -683,25 +1310,26 @@
                 const step = e.data;
                 console.log('Step:', step);
 
-                // Mark current step as active
+                // Update progress tracker based on step
                 if (step === 'optimizing_query') {
-                    updateSection('optimized-query', 'active');
+                    updateProgressTracker(1, 'active');
                 } else if (step === 'searching') {
-                    updateSection('optimized-query', 'completed');
-                    updateSection('search-results', 'active');
+                    updateProgressTracker(1, 'completed');
+                    updateProgressTracker(2, 'active');
                 } else if (step === 'quick_summary') {
-                    updateSection('quick-summary', 'active');
+                    updateProgressTracker(3, 'active');
                 } else if (step === 'fetching_content') {
-                    updateSection('search-results', 'completed');
-                    updateSection('fetched-content', 'active');
+                    updateProgressTracker(2, 'completed');
+                    updateProgressTracker(4, 'active');
                 } else if (step === 'comprehensive_summary') {
-                    updateSection('fetched-content', 'completed');
-                    updateSection('comprehensive-summary', 'active');
+                    updateProgressTracker(3, 'completed');
+                    updateProgressTracker(4, 'completed');
+                    updateProgressTracker(5, 'active');
                 }
             });
 
             eventSource.addEventListener('optimized_query', function(e) {
-                updateSection('optimized-query', 'completed', e.data);
+                updateSection('optimized-query', e.data);
             });
 
             eventSource.addEventListener('search_results', function(e) {
@@ -711,6 +1339,12 @@
                 // Get the container element
                 const dataElement = document.getElementById('data-search-results');
                 dataElement.innerHTML = ''; // Clear existing content
+
+                // Add summary header
+                const summaryHeader = document.createElement('div');
+                summaryHeader.className = 'results-summary';
+                summaryHeader.innerHTML = `<strong>📊 Found ${results.results.length} results</strong> ${results.results.length < requestedSourceCount ? `<span style="color: #ef4444;">(requested ${requestedSourceCount}, some may have failed)</span>` : ''}`;
+                dataElement.appendChild(summaryHeader);
 
                 // Build HTML structure
                 const container = document.createElement('div');
@@ -728,17 +1362,59 @@
                     const titleSpan = document.createElement('span');
                     titleSpan.innerHTML = `<strong>${i + 1}.</strong> ${escapeHtml(r.title)}`;
 
+                    // Add engine and score badges
+                    const metaSpan = document.createElement('span');
+                    metaSpan.style.marginLeft = '10px';
+                    metaSpan.style.fontSize = '12px';
+
+                    if (r.engine) {
+                        const engineBadge = document.createElement('span');
+                        engineBadge.className = 'search-engine-badge';
+                        engineBadge.textContent = r.engine;
+                        engineBadge.style.background = '#667eea';
+                        engineBadge.style.color = 'white';
+                        engineBadge.style.padding = '2px 8px';
+                        engineBadge.style.borderRadius = '4px';
+                        engineBadge.style.marginRight = '6px';
+                        engineBadge.style.fontWeight = '500';
+                        metaSpan.appendChild(engineBadge);
+                    }
+
+                    if (r.score !== null && r.score !== undefined) {
+                        const scoreBadge = document.createElement('span');
+                        scoreBadge.className = 'search-score-badge';
+                        scoreBadge.textContent = `Score: ${r.score.toFixed(2)}`;
+                        scoreBadge.style.background = '#10b981';
+                        scoreBadge.style.color = 'white';
+                        scoreBadge.style.padding = '2px 8px';
+                        scoreBadge.style.borderRadius = '4px';
+                        scoreBadge.style.fontWeight = '500';
+                        metaSpan.appendChild(scoreBadge);
+                    }
+
                     const iconSpan = document.createElement('span');
                     iconSpan.className = 'array-expand-icon';
                     iconSpan.textContent = '▼';
 
                     header.appendChild(titleSpan);
+                    header.appendChild(metaSpan);
                     header.appendChild(iconSpan);
 
                     const content = document.createElement('div');
                     content.className = 'array-item-content'; // This will be display:none by default
+
+                    let metaInfo = '';
+                    if (r.engine || r.score !== null) {
+                        metaInfo = '<p><strong>Metadata:</strong> ';
+                        if (r.engine) metaInfo += `Engine: <span style="color: #667eea; font-weight: 600;">${escapeHtml(r.engine)}</span>`;
+                        if (r.engine && r.score !== null) metaInfo += ' • ';
+                        if (r.score !== null && r.score !== undefined) metaInfo += `Relevance Score: <span style="color: #10b981; font-weight: 600;">${r.score.toFixed(4)}</span>`;
+                        metaInfo += '</p>';
+                    }
+
                     content.innerHTML = `
                         <p><strong>URL:</strong> <a href="${escapeHtml(r.url)}" target="_blank">${escapeHtml(r.url)}</a></p>
+                        ${metaInfo}
                         <p><strong>Snippet:</strong></p>
                         <pre>${escapeHtml(r.content || 'No snippet available')}</pre>
                     `;
@@ -751,14 +1427,6 @@
                 // Append the container
                 dataElement.appendChild(container);
                 console.log('Search results rendered, array items should be collapsed');
-
-                // Update section status
-                const section = document.getElementById('section-search-results');
-                section.classList.add('completed', 'expanded');
-                const badge = document.getElementById('badge-search-results');
-                badge.classList.remove('status-pending', 'status-active');
-                badge.classList.add('status-completed');
-                badge.textContent = 'Completed';
             });
 
             eventSource.addEventListener('quick_summary', function(e) {
@@ -766,66 +1434,66 @@
                 const html = renderMarkdown(markdown);
 
                 const dataElement = document.getElementById('data-quick-summary');
-                dataElement.innerHTML = `<div class="markdown-content">${html}</div>`;
-
-                const section = document.getElementById('section-quick-summary');
-                section.classList.add('completed');
-                const badge = document.getElementById('badge-quick-summary');
-                badge.classList.remove('status-pending', 'status-active');
-                badge.classList.add('status-completed');
-                badge.textContent = 'Completed';
+                // Keep the info banner and add summary
+                const infoBanner = dataElement.querySelector('.info-banner');
+                dataElement.innerHTML = '';
+                if (infoBanner) {
+                    dataElement.appendChild(infoBanner);
+                }
+                const summaryDiv = document.createElement('div');
+                summaryDiv.className = 'markdown-content';
+                summaryDiv.innerHTML = html;
+                dataElement.appendChild(summaryDiv);
             });
 
-            eventSource.addEventListener('contents_array', function(e) {
-                const contents = JSON.parse(e.data);
+            eventSource.addEventListener('structured_contents', function(e) {
+                const structuredContents = JSON.parse(e.data);
+
+                const dataElement = document.getElementById('data-fetched-content');
+                dataElement.innerHTML = '';
+
+                // Add summary header with success rate
+                const summaryHeader = document.createElement('div');
+                summaryHeader.className = 'results-summary';
+                const successRate = Math.round((structuredContents.length / requestedSourceCount) * 100);
+                const successColor = successRate >= 80 ? '#10b981' : successRate >= 50 ? '#f59e0b' : '#ef4444';
+                summaryHeader.innerHTML = `<strong>📥 Successfully fetched ${structuredContents.length} out of ${requestedSourceCount} sources</strong> <span style="color: ${successColor};">(${successRate}% success rate)</span>`;
+                dataElement.appendChild(summaryHeader);
 
                 // Build HTML structure
                 const container = document.createElement('div');
                 container.className = 'array-container';
 
-                contents.forEach((content, i) => {
-                    const preview = content.substring(0, 100) + (content.length > 100 ? '...' : '');
-
+                structuredContents.forEach((item, i) => {
+                    // Use regular div, not details, to avoid nested details blocking search
                     const arrayItem = document.createElement('div');
-                    arrayItem.className = 'array-item';
+                    arrayItem.className = 'array-item structured-content-item';
                     arrayItem.id = `content-item-${i}`;
 
                     const header = document.createElement('div');
                     header.className = 'array-item-header';
-                    header.onclick = () => toggleArrayItem(`content-item-${i}`);
 
-                    const titleSpan = document.createElement('span');
-                    titleSpan.innerHTML = `<strong>Source ${i + 1}</strong> - ${escapeHtml(preview)}`;
-
-                    const iconSpan = document.createElement('span');
-                    iconSpan.className = 'array-expand-icon';
-                    iconSpan.textContent = '▼';
-
-                    header.appendChild(titleSpan);
-                    header.appendChild(iconSpan);
+                    const titleText = item.title || 'Untitled';
+                    const sectionsText = item.sections && item.sections.length > 0
+                        ? `${item.sections.length} section${item.sections.length > 1 ? 's' : ''}`
+                        : 'No sections';
+                    const structureIcon = item.hasStructure ? '📑' : '📄';
+                    header.innerHTML = `<strong>${structureIcon} Source ${i + 1}:</strong> ${escapeHtml(titleText)} <span style="color: #6b7280; font-size: 12px;">(${sectionsText})</span>`;
 
                     const contentDiv = document.createElement('div');
                     contentDiv.className = 'array-item-content';
+                    contentDiv.style.display = 'block'; // Always visible for searchability
 
-                    const pre = document.createElement('pre');
-                    pre.textContent = content;
-                    contentDiv.appendChild(pre);
+                    // Build structured content display
+                    const contentHTML = buildStructuredContentHTML(item);
+                    contentDiv.innerHTML = contentHTML;
 
                     arrayItem.appendChild(header);
                     arrayItem.appendChild(contentDiv);
                     container.appendChild(arrayItem);
                 });
 
-                const dataElement = document.getElementById('data-fetched-content');
-                dataElement.innerHTML = '';
                 dataElement.appendChild(container);
-
-                const section = document.getElementById('section-fetched-content');
-                section.classList.add('completed', 'expanded');
-                const badge = document.getElementById('badge-fetched-content');
-                badge.classList.remove('status-pending', 'status-active');
-                badge.classList.add('status-completed');
-                badge.textContent = 'Completed';
             });
 
             eventSource.addEventListener('comprehensive_summary', function(e) {
@@ -835,16 +1503,12 @@
                 const dataElement = document.getElementById('data-comprehensive-summary');
                 dataElement.innerHTML = `<div class="markdown-content">${html}</div>`;
 
-                const section = document.getElementById('section-comprehensive-summary');
-                section.classList.add('completed');
-                const badge = document.getElementById('badge-comprehensive-summary');
-                badge.classList.remove('status-pending', 'status-active');
-                badge.classList.add('status-completed');
-                badge.textContent = 'Completed';
+                // Auto-expand comprehensive summary (already has 'open' attribute in HTML)
             });
 
             eventSource.addEventListener('complete', function(e) {
                 console.log('Research complete!');
+                updateProgressTracker(5, 'completed');
                 eventSource.close();
                 searchBtn.disabled = false;
                 btnText.textContent = 'Research';
@@ -870,6 +1534,15 @@
                 searchBtn.disabled = false;
                 btnText.textContent = 'Research';
             };
+        });
+
+        // Auto-start research on page load
+        window.addEventListener('load', function() {
+            // Small delay to ensure everything is loaded
+            setTimeout(function() {
+                const searchForm = document.getElementById('searchForm');
+                searchForm.dispatchEvent(new Event('submit'));
+            }, 500);
         });
     </script>
 </body>

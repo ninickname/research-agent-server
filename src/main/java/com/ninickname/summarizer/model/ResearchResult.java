@@ -8,16 +8,16 @@ public class ResearchResult {
     private String optimizedQuery;
     private SearxngResponse searchResults;
     private String quickSummary;
-    private List<String> contents;
+    private List<ContentData> structuredContents;
     private String comprehensiveSummary;
 
     public ResearchResult() {
-        this.contents = new ArrayList<>();
+        this.structuredContents = new ArrayList<>();
     }
 
     public ResearchResult(String topic) {
         this.topic = topic;
-        this.contents = new ArrayList<>();
+        this.structuredContents = new ArrayList<>();
     }
 
     // Setters for incremental updates
@@ -37,8 +37,12 @@ public class ResearchResult {
         this.quickSummary = quickSummary;
     }
 
-    public void setContents(List<String> contents) {
-        this.contents = new ArrayList<>(contents);
+    public List<ContentData> getStructuredContents() {
+        return structuredContents;
+    }
+
+    public void setStructuredContents(List<ContentData> structuredContents) {
+        this.structuredContents = structuredContents;
     }
 
     public void setComprehensiveSummary(String comprehensiveSummary) {
@@ -62,10 +66,6 @@ public class ResearchResult {
         return quickSummary;
     }
 
-    public List<String> getContents() {
-        return contents;
-    }
-
     public String getComprehensiveSummary() {
         return comprehensiveSummary;
     }
@@ -77,7 +77,7 @@ public class ResearchResult {
                 ", optimizedQuery='" + optimizedQuery + '\'' +
                 ", searchResults=" + (searchResults != null ? searchResults.results().size() + " results" : "null") +
                 ", quickSummary=" + (quickSummary != null ? "available" : "null") +
-                ", contents=" + contents.size() + " fetched" +
+                ", structuredContents=" + (structuredContents != null ? structuredContents.size() + " fetched" : "null") +
                 ", comprehensiveSummary=" + (comprehensiveSummary != null ? "available" : "null") +
                 '}';
     }
