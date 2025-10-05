@@ -1,14 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mv:*)",
       "Bash(mvn clean:*)",
       "Bash(mvn test:*)",
-      "Read(//c/Users/NiNiCkNaMe/Desktop/NickPlayground/sear-xng-mcp-server/**)",
-      "Bash(docker-compose:*)",
-      "Bash(curl -s \"http://localhost:8080/api/research?topic=spring%20boot&count=2\")",
-      "Bash(docker logs:*)",
-      "Bash(docker exec:*)",
       "Bash(curl:*)"
     ],
     "deny": [],

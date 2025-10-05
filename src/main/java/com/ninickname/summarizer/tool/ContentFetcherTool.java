@@ -219,10 +219,10 @@ public class ContentFetcherTool {
             Elements h2Headings = mainElement.select("h2");
             Elements h3Headings = mainElement.select("h3");
 
-            logger.info("Found {} h2 and {} h3 headings in mainElement for {}",
+            logger.trace("Found {} h2 and {} h3 headings in mainElement for {}",
                     h2Headings.size(), h3Headings.size(), url);
             if (!h2Headings.isEmpty()) {
-                logger.info("H2 headings: {}", h2Headings.stream().map(Element::text).limit(5).toList());
+                logger.trace("H2 headings: {}", h2Headings.stream().map(Element::text).limit(5).toList());
             }
 
             // If no headings found in mainElement, try searching the whole body
@@ -233,7 +233,7 @@ public class ContentFetcherTool {
                     h3Headings = body.select("h3");
                     // If we found headings in body, use body as mainElement
                     if (!h2Headings.isEmpty() || !h3Headings.isEmpty()) {
-                        logger.info("No headings in mainElement, using body instead (found {} h2, {} h3)",
+                        logger.trace("No headings in mainElement, using body instead (found {} h2, {} h3)",
                                 h2Headings.size(), h3Headings.size());
                         mainElement = body;
                     }
@@ -256,7 +256,7 @@ public class ContentFetcherTool {
 
                 // Prefer h3 if: h3s outnumber h2s by 3x OR h2s are repetitive
                 if (h3Headings.size() >= h2Headings.size() * 3 || h2sRepetitive) {
-                    logger.info("Using h3 headings instead of h2 ({} h3s vs {} h2s, h2s repetitive: {})",
+                    logger.trace("Using h3 headings instead of h2 ({} h3s vs {} h2s, h2s repetitive: {})",
                             h3Headings.size(), h2Headings.size(), h2sRepetitive);
                     selectedHeadings = h3Headings;
                 } else {
@@ -299,7 +299,7 @@ public class ContentFetcherTool {
                     null  // score
             );
 
-            logger.debug("Extracted structured content from {}: {} sections, {} chars, hasStructure={}",
+            logger.trace("Extracted structured content from {}: {} sections, {} chars, hasStructure={}",
                     url, sectionDataList.size(), totalChars, hasStructure);
 
             return contentData;

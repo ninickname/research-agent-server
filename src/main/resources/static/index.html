@@ -1306,7 +1306,7 @@
             }
 
             // Create SSE connection
-            eventSource = new EventSource(`/api/research/stream?topic=${encodeURIComponent(topic)}&count=${count}`);
+            eventSource = new EventSource(`/api/research/graph/stream?topic=${encodeURIComponent(topic)}&count=${count}`);
 
             eventSource.addEventListener('step', function(e) {
                 const step = e.data;
