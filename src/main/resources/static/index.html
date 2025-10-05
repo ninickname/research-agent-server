@@ -187,16 +187,18 @@
         .progress-steps {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             position: relative;
+            padding: 20px 16px 0 16px;
+            min-height: 80px;
         }
 
         .progress-line {
             position: absolute;
-            top: 16px;
-            left: 0;
-            right: 0;
-            height: 3px;
+            top: 36px;
+            left: 64px;
+            width: calc(100% - 128px);
+            height: 4px;
             background: #e5e7eb;
             z-index: 0;
         }
@@ -1310,19 +1312,19 @@
                 const step = e.data;
                 console.log('Step:', step);
 
-                // Update progress tracker based on step
+                // Update progress tracker based on step (sequential: 1→2→3→4→5)
                 if (step === 'optimizing_query') {
                     updateProgressTracker(1, 'active');
                 } else if (step === 'searching') {
                     updateProgressTracker(1, 'completed');
                     updateProgressTracker(2, 'active');
                 } else if (step === 'quick_summary') {
+                    updateProgressTracker(2, 'completed');
                     updateProgressTracker(3, 'active');
                 } else if (step === 'fetching_content') {
-                    updateProgressTracker(2, 'completed');
+                    updateProgressTracker(3, 'completed');
                     updateProgressTracker(4, 'active');
                 } else if (step === 'comprehensive_summary') {
-                    updateProgressTracker(3, 'completed');
                     updateProgressTracker(4, 'completed');
                     updateProgressTracker(5, 'active');
                 }
